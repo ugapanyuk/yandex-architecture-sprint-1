@@ -1,0 +1,59 @@
+@startuml C4_Elements
+!include <C4/C4_Container>
+
+System_Boundary(system1, "Система") {
+    Container(heat, "Микросервис управления отоплением")
+    Container(light, "Микросервис управления светом")
+    Container(gate, "Микросервис управления автоматическими воротами")
+    Container(video, "Микросервис удалённого наблюдения за домом")
+    Container(temp, "Микросервис мониторинга температуры")
+    Container(new, "Микросервис управления дополнительными датчиками")
+    Container(sh_tele, "Микросервис просмотра телеметрии")
+    Container(sh_tune, "Микросервис настройки и подключения модулей умного дома")
+}
+
+Person(personAlias, "Пользователи")
+Rel(personAlias, heat, "Управление отоплением")
+Rel(personAlias, light, "Включение и выключение света")
+Rel(personAlias, gate, "Запирание и отпирание автоматических ворот")
+Rel(personAlias, video, "Наблюдение за домом")
+Rel(personAlias, temp, "Получение данных о температуре")
+Rel(personAlias, new, "Взаимодействие с дополнительными датчиками")
+Rel(personAlias, sh_tele, "Просмотр телеметрии")
+Rel(personAlias, sh_tune, "Настройка модулей умного дома")
+
+Rel(sh_tune, heat, "Настройка модуля")
+Rel(sh_tune, light, "Настройка модуля")
+Rel(sh_tune, gate, "Настройка модуля")
+Rel(sh_tune, video, "Настройка модуля")
+Rel(sh_tune, temp, "Настройка модуля")
+Rel(sh_tune, new, "Настройка модуля")
+Rel(sh_tune, sh_tele, "Настройка модуля")
+
+
+System(heat_sensors, "Датчики отопления")
+Rel(heat, heat_sensors, "Взаимодействие с датчиками отопления", "Чтение/Запись")
+
+System(light_sensors, "Датчики света")
+Rel(light, light_sensors, "Взаимодействие с датчиками света", "Чтение/Запись")
+
+System(gate_sensors, "Датчики ворот")
+Rel(gate, gate_sensors, "Взаимодействие с датчиками ворот", "Чтение/Запись")
+
+System(video_sensors, "Видеокамеры")
+Rel(video, video_sensors, "Взаимодействие с видеокамерами", "Чтение")
+
+System(temp_sensors, "Датчик температуры")
+Rel(temp, temp_sensors, "Взаимодействие с датчиком температуры", "Чтение")
+
+System(new_sensors, "Дополнительные датчики")
+Rel(new, new_sensors, "Взаимодействие с дополнительными датчиками", "Чтение")
+
+Rel(sh_tele, heat_sensors, "Чтение датчиков отопления", "Чтение")
+Rel(sh_tele, light_sensors, "Чтение датчиков света", "Чтение")
+Rel(sh_tele, gate_sensors, "Чтение датчиков ворот", "Чтение")
+Rel(sh_tele, video_sensors, "Чтение данных с видеокамер", "Чтение")
+Rel(sh_tele, temp_sensors, "Чтение датчика температуры", "Чтение")
+Rel(sh_tele, new_sensors, "Чтение данных с дополнительных датчиков", "Чтение")
+
+@enduml

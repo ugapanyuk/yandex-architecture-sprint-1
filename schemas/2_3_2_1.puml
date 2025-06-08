@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+
+System_Boundary(system1, "Микросервис управления отоплением") {
+    Container(frontend, "Микрофронтенд взаимодействия с пользователями", "Экранные формы для управления отоплением")
+    Container(backend, "Серверная часть микросервиса управления отоплением", "Реализация бизнес-логики микросервиса")
+    ContainerQueue(sensor_api, "API взаимодействия с датчиками")
+    ContainerDb(db_conf, "База данных настроек микросервиса")
+    ContainerDb(db_data, "База данных для хранения данных микросервиса")
+}
+
+Person(personAlias, "Пользователи")
+
+Rel(personAlias, frontend, "Управление с помощью пользовательского интерфейса")
+Rel(frontend, backend, "Передача управления в серверную часть")
+Rel(backend, sensor_api, "Взаимодействие с датчиками")
+Rel(backend, db_conf, "Хранение настроек микросервиса")
+Rel(backend, db_data, "Хранение данных микросервиса")
+
+@enduml
