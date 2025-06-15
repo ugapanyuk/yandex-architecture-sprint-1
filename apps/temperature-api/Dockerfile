@@ -1,35 +1,15 @@
-# Build stage
-FROM golang:1.22-alpine AS builder
+FROM python:3.12
 
-# Set working directory
-WORKDIR /app
+RUN mkdir /usr/src/app
 
-# Copy go.mod and go.sum files
-COPY go.mod go.sum ./
+COPY main.py /usr/src/app
 
-# Download dependencies
-RUN go mod download
+COPY requirements.txt /usr/src/app
 
-# Copy the source code
-COPY . .
+WORKDIR /usr/src/app
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o temperature-api
+RUN pip install -r requirements.txt
 
-# Runtime stage
-FROM alpine:latest
-
-# Install necessary runtime dependencies
-RUN apk --no-cache add ca-certificates tzdata
-
-# Set working directory
-WORKDIR /app
-
-# Copy the binary from the builder stage
-COPY --from=builder /app/temperature-api .
-
-# Expose the port the app runs on
 EXPOSE 8081
 
-# Command to run the application
-CMD ["./temperature-api"]
+CMD ["fastapi", "run", "main.py", "--port=8081"]
