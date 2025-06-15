@@ -1,0 +1,18 @@
+@startuml C4_Elements
+!include <C4/C4_Container>
+
+System_Boundary(system1, "Система") {
+    Container(heat, "Управление отоплением", "Golang")
+    Container(temp, "Мониторинг температуры", "Golang")
+}
+Person(personAlias, "Пользователи")
+Rel(personAlias, heat, "Включение и выключение отопления")
+Rel(personAlias, temp, "Получение данных о температуре")
+
+System(heat_sensors, "Датчики отопления")
+System(temp_sensors, "Датчик температуры")
+
+Rel(heat, heat_sensors, "Взаимодействие с датчиками отопления", "Чтение/Запись")
+Rel(temp, temp_sensors, "Взаимодействие с датчиком температуры", "Чтение")
+
+@enduml
