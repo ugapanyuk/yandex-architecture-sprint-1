@@ -17,7 +17,7 @@ class TemperatureData(BaseModel):
     timestamp: str | None
     location: str
     status: str
-    sensor_id: int
+    sensor_id: str
     sensor_type: str
     description: str
 
@@ -31,22 +31,25 @@ def rand_temp():
     return random.randint(18, 28)
 
 def dt():
-    return str(datetime.datetime.now())    
+    #return str(datetime.datetime.now())
+    d = str(datetime.datetime.now())
+    l1 = d.split(' ')
+    result = f'{l1[0]}T{l1[1]}Z'
+    return result
 
 
-@app.get("/temperature/")
-async def get_by_location(location: str):
+@app.get("/temperature/{param}")
+async def get_by_location(param: str):
     return TemperatureData(
                 value = rand_temp(),
                 unit = str('C'),
                 timestamp = dt(),
-                location = str(location),
+                location = '',
                 status = 'active',
-                sensor_id = '1',
+                sensor_id = param,
                 sensor_type = 'temperature',
-                description = 'Temperature sensor in ' + str(location),
-        )
-
+                description = 'Temperature sensor in '
+            )
 
 
 @app.post("/api/v1/sensors/")
