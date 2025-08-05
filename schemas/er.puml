@@ -1,0 +1,75 @@
+@startuml
+
+entity "Пользователь" as user {
+  * id пользователя: <<PK>> number <<generated>>
+  --
+  * ФИО 
+  * описание 
+}
+
+
+entity "Умный дом" as home {
+  * id дома: <<PK>> number <<generated>>
+  --
+  * id пользователя: number <<FK>>
+  --
+  * адрес 
+}
+
+home }|..|| user
+
+
+entity "Тип модуля" as module_type {
+  * id типа модуля: <<PK>> number <<generated>>
+  --
+  * Наименование типа модуля
+}
+
+entity "Модуль" as module {
+  * id модуля: <<PK>> number <<generated>>
+  --
+  * id типа модуля: number <<FK>>
+  * id дома: number <<FK>>
+  --
+  * Наименование модуля
+}
+
+module }o..|| module_type
+module }o..|| home
+
+entity "Тип устройства" as device_type {
+  * id типа устройства: <<PK>> number <<generated>>
+  --
+  * Наименование типа устройства
+}
+
+entity "Устройство" as device {
+  * id устройства: <<PK>> number <<generated>>
+  --
+  * id модуля: number <<FK>>
+  * id типа устройства: number <<FK>>
+  --
+  * серийный номер устройства
+  * параметры подключения
+  * описание устройства
+  * статус (включено или выключено)
+}
+
+device }o..|| device_type
+device }o..|| module
+
+entity "Данные телеметрии" as telemetry {
+  * id телеметрии: <<PK>> number <<generated>>
+  --
+  * id устройства: number <<FK>>
+  --
+  * значение телеметрии
+  * метка даты-времени
+}
+
+telemetry }o..|| device
+
+
+
+@enduml
+

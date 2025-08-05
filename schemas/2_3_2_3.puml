@@ -1,0 +1,32 @@
+@startuml C4_Elements
+!include <C4/C4_Container>
+
+System_Boundary(system1, "Микросервис настройки и подключения модулей умного дома") {
+    Container(frontend, "Микрофронтенд взаимодействия с пользователями")
+    Container(backend, "Серверная часть микросервиса")
+    ContainerDb(db_conf, "База данных настроек микросервиса")
+    ContainerQueue(module_api, "API настройки модулей")
+    ContainerQueue(sensor_api, "API подключения датчиков модулей")
+    ContainerQueue(frontend_api, "API подключения микрофонтендов модулей")
+}
+
+Person(personAlias, "Пользователи")
+
+Rel(personAlias, frontend, "Управление с помощью пользовательского интерфейса")
+Rel(frontend, backend, "Передача управления в серверную часть")
+Rel(backend, db_conf, "Хранение настроек микросервиса")
+Rel(backend, sensor_api, "Подключение датчиков модулей")
+Rel(backend, module_api, "Подключение и настройка модулей")
+Rel(backend, frontend_api, "Подключение микрофонтендов модулей")
+
+System(interface_sensors, "Интерфейс датчика")
+Rel(sensor_api, interface_sensors, "Подключение датчика", "Чтение/Запись")
+
+System(interface_frontend, "Интерфейс микрофронтенда")
+Rel(frontend_api, interface_frontend, "Подключение микрофронтенда", "Чтение/Запись")
+
+System(interface_module, "Модули системы")
+Rel(module_api, interface_module, "Подключение и настройка модулей", "Чтение/Запись")
+
+
+@enduml

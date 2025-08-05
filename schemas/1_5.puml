@@ -1,0 +1,14 @@
+@startuml C4_Elements
+!include <C4/C4_Container>
+
+System_Boundary(system1, "Система") {
+    Container(system2, "Управление отоплением и мониторинг температуры")
+}
+Person(personAlias, "Пользователи")
+Rel(personAlias, system2, "Включение и выключение отопления / Получение данных о температуре")
+
+System(sensors, "Датчики")
+
+Rel(system2, sensors, "Взаимодействие с датчиками")
+
+@enduml

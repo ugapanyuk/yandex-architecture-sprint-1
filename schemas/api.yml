@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Микросервис управления отоплением
+  version: '1.0.0'
+  description: API микросервиса управления отоплением умного дома.
+
+servers:
+  - url: https://smarthome/heating-service/api/v1
+
+paths:
+  /heating/status:
+    get:
+      summary: Получить текущий статус отопления
+      tags:
+        - Отопление
+      responses:
+        '200':
+          description: Успешный ответ с текущим статусом отопления
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isOn:
+                    type: boolean
+                    description: Включено ли отопление
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: Текущее время изменения статуса
+              examples:
+                example1:
+                  value:
+                    isOn: true
+                    updatedAt: '2025-06-14T20:00:00Z'
+        '404':
+          description: Сервис не найден
+        '500':
+          description: Ошибка сервера
+
+  /heating/switch:
+    post:
+      summary: Включить или выключить отопление
+      tags:
+        - Отопление
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                turnOn:
+                  type: boolean
+                  description: true-включить, false-выключить
+            examples:
+              turnOn:
+                value:
+                  turnOn: true
+              turnOff:
+                value:
+                  turnOn: false
+      responses:
+        '200':
+          description: Статус отопления успешно изменён
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isOn:
+                    type: boolean
+                    description: Новый статус отопления
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: Время изменения статуса
+              examples:
+                example1:
+                  value:
+                    isOn: true
+                    updatedAt: '2025-06-14T20:01:00Z'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Сервис не найден
+        '500':
+          description: Ошибка сервера
+
+  /heating/history:
+    get:
+      summary: Получить историю включений/выключений отопления
+      tags:
+        - Отопление
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10000
+          description: Максимальное число записей (по умолчанию 10)
+      responses:
+        '200':
+          description: История событий отопления
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        isOn:
+                          type: boolean
+                        changedAt:
+                          type: string
+                          format: date-time
+              examples:
+                example1:
+                  value:
+                    events:
+                      - isOn: true
+                        changedAt: '2025-06-14T15:00:00Z'
+                      - isOn: false
+                        changedAt: '2025-06-13T10:00:00Z'
+        '404':
+          description: Сервис не найден
+        '500':
+          description: Ошибка сервера
+
+  /heating/settings:
+    get:
+      summary: Получить параметры подключения к датчику отопления
+      tags:
+        - Настройки
+      responses:
+        '200':
+          description: Параметры подключения успешно получены
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connectionString:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    connectionString: "строка подключения"
+        '404':
+          description: Настройки не найдены
+        '500':
+          description: Ошибка сервера
+
+    put:
+      summary: Изменить параметры подключения к датчику отопления
+      tags:
+        - Настройки
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                connectionString:
+                  type: string
+            examples:
+              example1:
+                value:
+                  connectionString: "строка подключения"
+      responses:
+        '200':
+          description: Настройки успешно обновлены
+        '400':
+          description: Ошибка валидации данных
+        '500':
+          description: Ошибка сервера
+
